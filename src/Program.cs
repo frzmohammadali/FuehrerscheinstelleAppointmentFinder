@@ -150,6 +150,7 @@ while (keepRunning)
 
 logger.LogInformation("--== ChromeDriver is successfully closed ==--");
 logger.LogInformation("--== application shuting down ==--");
+await Task.Delay(1000);
 Console.WriteLine("\n");
 Console.WriteLine("Press any key to exit...");
 Console.ReadKey();
