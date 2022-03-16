@@ -10,8 +10,8 @@ A script for periodically checking available appointments of the driving license
 3. Modify the arguments according to your needs. You will need a free [SendGrid](https://signup.sendgrid.com/) account with a valid api key for sending emails.
 4. To run with docker
 	1. Open a terminal at `src/`
-	2. Run `$ docker build -t FuehrerscheinstelleAppointmentFinder .`
-	3. Run `$ docker run -it FuehrerscheinstelleAppointmentFinder`
+	2. Run `$ docker build -t fuehrerscheinstelle_appointment_finder:latest .`
+	3. Run `$ docker run -it fuehrerscheinstelle_appointment_finder`
 5. To run natively
 	1. Open a terminal at `src/`
 	2. Run `$ dotnet run`
