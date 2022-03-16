@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "FuehrerscheinstelleAppointmentFinder": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
