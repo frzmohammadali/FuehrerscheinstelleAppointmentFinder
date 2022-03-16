@@ -2,7 +2,7 @@
 A script for periodically checking available appointments of the driving license office in Kaiserslautern
 
 # Prerequisites
-- docker OR .Net .0 runtime
+- docker OR .Net6.0 runtime
 
 # How to run the script
 1. Clone the repo
