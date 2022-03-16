@@ -26,6 +26,7 @@ void Console_CancelKeyPress(object? sender, ConsoleCancelEventArgs e)
 var config = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false)
+    .AddJsonFile("appsettings.local.json", optional: true)
     .Build();
 
 var app = Host.CreateDefaultBuilder()
