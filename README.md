@@ -17,4 +17,4 @@ A script for periodically checking available appointments of the driving license
 	2. Run `$ dotnet run`
 
 ### Further notes
-If ou ever face issues or have suggestions for improvement, feel free to open an issue or create pull request.
+If you ever face issues or have suggestions for improvement, feel free to open an issue or create pull request.
