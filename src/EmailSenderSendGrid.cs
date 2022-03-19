@@ -5,15 +5,17 @@ using SendGrid.Helpers.Mail;
 
 namespace FuehrerscheinstelleAppointmentFinder
 {
-    internal class EmailSender
+    internal class EmailSenderSendGrid : IEmailSender
     {
 
-        private readonly ILogger _logger;
+        private readonly ILogger<EmailSenderSendGrid> _logger;
+        private readonly SendGridOptions _sendGridOptions;
 
-        public EmailSender(IOptions<AppOptions> optionsAccessor,
-                           ILogger<EmailSender> logger)
+        public EmailSenderSendGrid(IOptions<AppOptions> optionsAccessor,
+                           ILogger<EmailSenderSendGrid> logger)
         {
             Options = optionsAccessor.Value;
+            _sendGridOptions = Options.EmailSenderOptions.SendGridOptions;
             _logger = logger;
         }
 
@@ -21,19 +23,20 @@ namespace FuehrerscheinstelleAppointmentFinder
 
         public async Task SendEmailAsync(string toEmail, string subject, string message)
         {
-            if (string.IsNullOrEmpty(Options.SendGridKey))
+            if (string.IsNullOrEmpty(_sendGridOptions.ApiKey))
             {
                 throw new Exception("Null SendGridKey");
             }
-            await Execute(Options.SendGridKey, subject, message, toEmail);
+            await Execute(_sendGridOptions.ApiKey, subject, message, toEmail);
         }
 
-        public async Task Execute(string apiKey, string subject, string message, string toEmail)
+        private async Task Execute(string apiKey, string subject, string message, string toEmail)
         {
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
-                From = new EmailAddress(Options.SenderEmail, Options.SenderName),
+                From = new EmailAddress(_sendGridOptions.SenderEmail,
+                    _sendGridOptions.SenderName),
                 Subject = subject,
                 PlainTextContent = message,
                 HtmlContent = message
