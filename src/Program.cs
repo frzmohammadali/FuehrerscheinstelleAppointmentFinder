@@ -90,10 +90,7 @@ while (keepRunning)
         lock (_lock)
         {
             using var driver = app.Services.GetRequiredService<ChromeDriver>();
-            driver.Navigate().GoToUrl("https://www.kaiserslautern.de/serviceportal/dl/037455/index.html.de");
-
-            var link = driver.FindElement(By.XPath("/html/body/div[7]/div/div/div[2]/div[2]/div[5]/div/ul/li[4]/a"));
-            link.Click();
+            driver.Navigate().GoToUrl("https://onlinetermine.kaiserslautern.de/fuehrerscheinstelle");
 
             var zipCodeInput = driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[3]/div[2]/div[1]/div/div/input"));
             zipCodeInput.SendKeys(options.ZipCode);
@@ -182,6 +179,8 @@ while (keepRunning)
                     sb.Append(
                         $"And an appointment on {chosenDate.ToString("D")} " +
                         $"at {actualSelectedTime} is successfully booked!");
+
+                    keepRunning = false;
                 }
 
                 var message = sb.ToString();
@@ -201,11 +200,9 @@ while (keepRunning)
     }
     finally
     {
-        logger.LogInformation("--== successful tries: {su_count} ==--", successfulTryCount);
-        logger.LogInformation("--== unsuccessful tries: {unsu_count} ==--", unsuccessfulTryCount);
+        logger.LogInformation("--== successful tries:   {su_count} ==--\n      " +
+                                    "--== unsuccessful tries: {unsu_count} ==--", successfulTryCount, unsuccessfulTryCount);
     }
-
-
 }
 
 await app.StopAsync(TimeSpan.FromSeconds(5));
