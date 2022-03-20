@@ -9,6 +9,7 @@
         public string RecipientEmail { get; set; }
         public EmailSenderOptions EmailSenderOptions { get; set; }
         public AppointmentBookingForm AppointmentBookingForm { get; set; }
+        public ChromeDriverOptions ChromeDriverOptions { get; set; }
     }
 
     public class EmailSenderOptions
@@ -42,6 +43,11 @@
         public string EmailAddress { get; set; }
         public string PhoneNumber { get; set; }
         public string Birthday { get; set; }
+    }
+
+    public class ChromeDriverOptions
+    {
+        public bool Headless { get; set; }
     }
 
 }

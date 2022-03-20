@@ -42,9 +42,10 @@ var app = Host.CreateDefaultBuilder()
         services.AddSingleton<IEmailSender, EmailSenderSmtp>();
         services.AddTransient<ChromeDriver>(sp =>
         {
+            var chromeDriverOptions = sp.GetRequiredService<IOptions<AppOptions>>().Value.ChromeDriverOptions;
             new DriverManager().SetUpDriver(new ChromeConfig(), VersionResolveStrategy.MatchingBrowser);
             var options = new ChromeOptions();
-            //options.AddArgument("headless");
+            if (chromeDriverOptions.Headless) options.AddArgument("headless");
             var driver = new ChromeDriver(options);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             var _logger = sp.GetRequiredService<ILogger<Program>>();
