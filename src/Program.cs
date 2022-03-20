@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -126,53 +125,53 @@ while (keepRunning)
                     sb.AppendLine("<br />");
                 }
 
-                var chosenDate = datesFiltered.First();
-                var dateToClick = driver.FindElement(By.CssSelector($"a#day-{chosenDate:yyyy-MM-dd}"));
-                dateToClick.Click();
-
-                var timeDialog =
-                        driver
-                            .FindElements(By.CssSelector("div.smart-date-list"))
-                            .FirstOrDefault(e => e.Displayed);
-                if (timeDialog is null)
-                    throw new OperationCanceledException("time dialog is not visible on page after click on a date");
-
-                var timeLinkToClick = timeDialog.FindElements(By.CssSelector("a.ui.primary.button")).FirstOrDefault();
-                if (timeLinkToClick is null)
-                    throw new OperationCanceledException("a visible link to a time to select is not found");
-                var actualSelectedTime = timeLinkToClick.Text;
-                timeLinkToClick.Click();
-
-                var firstNameInput =
-                    driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[2]/div[1]/div/div[1]/div[3]/input"));
-                firstNameInput.SendKeys(options.AppointmentBookingForm.FirstName);
-
-                var lastNameInput =
-                    driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[2]/div[1]/div/div[1]/div[4]/input"));
-                lastNameInput.SendKeys(options.AppointmentBookingForm.LastName);
-
-                var emailInput =
-                    driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[2]/div[1]/div/div[1]/div[5]/input"));
-                emailInput.SendKeys(options.AppointmentBookingForm.EmailAddress);
-
-                var emailAgainInput =
-                    driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[2]/div[1]/div/div[1]/div[6]/input"));
-                emailAgainInput.SendKeys(options.AppointmentBookingForm.EmailAddress);
-
-                var phoneInput =
-                    driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[2]/div[1]/div/div[1]/div[7]/input"));
-                phoneInput.SendKeys(options.AppointmentBookingForm.PhoneNumber);
-
-                var birthdayInput =
-                    driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[2]/div[1]/div/div[1]/div[8]/input"));
-                birthdayInput.SendKeys(options.AppointmentBookingForm.Birthday);
-
-                var agreeToPolicyInput =
-                    driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[2]/div[1]/div/div[1]/div[9]/input"));
-                agreeToPolicyInput.Click();
-
                 if (options.AppointmentBookingForm.Enabled)
                 {
+                    var chosenDate = datesFiltered.First();
+                    var dateToClick = driver.FindElement(By.CssSelector($"a#day-{chosenDate:yyyy-MM-dd}"));
+                    dateToClick.Click();
+
+                    var timeDialog =
+                            driver
+                                .FindElements(By.CssSelector("div.smart-date-list"))
+                                .FirstOrDefault(e => e.Displayed);
+                    if (timeDialog is null)
+                        throw new OperationCanceledException("time dialog is not visible on page after click on a date");
+
+                    var timeLinkToClick = timeDialog.FindElements(By.CssSelector("a.ui.primary.button")).FirstOrDefault();
+                    if (timeLinkToClick is null)
+                        throw new OperationCanceledException("a visible link to a time to select is not found");
+                    var actualSelectedTime = timeLinkToClick.Text;
+                    timeLinkToClick.Click();
+
+                    var firstNameInput =
+                        driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[2]/div[1]/div/div[1]/div[3]/input"));
+                    firstNameInput.SendKeys(options.AppointmentBookingForm.FirstName);
+
+                    var lastNameInput =
+                        driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[2]/div[1]/div/div[1]/div[4]/input"));
+                    lastNameInput.SendKeys(options.AppointmentBookingForm.LastName);
+
+                    var emailInput =
+                        driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[2]/div[1]/div/div[1]/div[5]/input"));
+                    emailInput.SendKeys(options.AppointmentBookingForm.EmailAddress);
+
+                    var emailAgainInput =
+                        driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[2]/div[1]/div/div[1]/div[6]/input"));
+                    emailAgainInput.SendKeys(options.AppointmentBookingForm.EmailAddress);
+
+                    var phoneInput =
+                        driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[2]/div[1]/div/div[1]/div[7]/input"));
+                    phoneInput.SendKeys(options.AppointmentBookingForm.PhoneNumber);
+
+                    var birthdayInput =
+                        driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[2]/div[1]/div/div[1]/div[8]/input"));
+                    birthdayInput.SendKeys(options.AppointmentBookingForm.Birthday);
+
+                    var agreeToPolicyInput =
+                        driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[2]/div[1]/div/div[1]/div[9]/input"));
+                    agreeToPolicyInput.Click();
+
                     var submitButton =
                         driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[2]/div[1]/div/div[2]/button"));
                     submitButton.Click();
@@ -184,7 +183,7 @@ while (keepRunning)
                         $"And an appointment on {chosenDate.ToString("D")} " +
                         $"at {actualSelectedTime} is successfully booked!");
                 }
-                
+
                 var message = sb.ToString();
                 _ = app.Services.GetRequiredService<IEmailSender>()
                     .SendEmailAsync(options.RecipientEmail, "New Fuehrerscheinstelle appointment available", message);
