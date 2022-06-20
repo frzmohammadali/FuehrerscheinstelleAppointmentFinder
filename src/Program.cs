@@ -38,7 +38,8 @@ var app = Host.CreateDefaultBuilder()
         .Bind(config.GetSection(nameof(AppOptions)))
         .ValidateDataAnnotations();
         //services.AddSingleton<IEmailSender, EmailSenderSendGrid>();
-        services.AddSingleton<IEmailSender, EmailSenderSmtp>();
+        //services.AddSingleton<IEmailSender, EmailSenderSmtp>();
+        services.AddSingleton<IEmailSender, GmailSederService>();
         services.AddTransient<ChromeDriver>(sp =>
         {
             var chromeDriverOptions = sp.GetRequiredService<IOptions<AppOptions>>().Value.ChromeDriverOptions;
@@ -47,12 +48,12 @@ var app = Host.CreateDefaultBuilder()
             if (chromeDriverOptions.Headless) options.AddArgument("headless");
             var driver = new ChromeDriver(options);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            var _logger = sp.GetRequiredService<ILogger<Program>>();
-            driver.GetDevToolsSession().LogMessage += DevToolsSessionLogMessage;
-            void DevToolsSessionLogMessage(object? sender, OpenQA.Selenium.DevTools.DevToolsSessionLogMessageEventArgs e)
-            {
-                _logger.LogDebug(e.Level.ToString(), e.Message);
-            }
+            //var _logger = sp.GetRequiredService<ILogger<Program>>();
+            //driver.GetDevToolsSession().LogMessage += DevToolsSessionLogMessage;
+            //void DevToolsSessionLogMessage(object? sender, OpenQA.Selenium.DevTools.DevToolsSessionLogMessageEventArgs e)
+            //{
+            //    _logger.LogDebug(e.Level.ToString(), e.Message);
+            //}
             return driver;
         });
     })

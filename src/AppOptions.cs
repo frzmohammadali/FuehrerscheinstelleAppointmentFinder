@@ -1,4 +1,6 @@
-﻿namespace FuehrerscheinstelleAppointmentFinder
+﻿using System.Security.AccessControl;
+
+namespace FuehrerscheinstelleAppointmentFinder
 {
     public class AppOptions
     {
@@ -10,12 +12,14 @@
         public EmailSenderOptions EmailSenderOptions { get; set; }
         public AppointmentBookingForm AppointmentBookingForm { get; set; }
         public ChromeDriverOptions ChromeDriverOptions { get; set; }
+        
     }
 
     public class EmailSenderOptions
     {
         public SendGridOptions SendGridOptions { get; set; }
         public SmtpOptions SmtpOptions { get; set; }
+        public GmailOptions GmailOptions { get; set; }
     }
 
     public class SendGridOptions
@@ -33,6 +37,17 @@
         public string SenderEmail { get; set; }
         public string SenderName { get; set; }
         public string Password { get; set; }
+    }
+
+    public class GmailOptions
+    {
+        public string ClientId { get; set; }
+        public string ClientSecret { get; set; }
+        public string UserId { get; set; }
+        public string ApplicationName { get; set; }
+        public string AccessToken { get; set; }
+        public string RefreshToken { get; set; }
+        
     }
 
     public class AppointmentBookingForm
