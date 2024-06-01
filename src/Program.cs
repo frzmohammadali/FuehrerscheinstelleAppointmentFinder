@@ -38,8 +38,8 @@ var app = Host.CreateDefaultBuilder()
         .Bind(config.GetSection(nameof(AppOptions)))
         .ValidateOnStart();
         //services.AddSingleton<IEmailSender, EmailSenderSendGrid>();
-        //services.AddSingleton<IEmailSender, EmailSenderSmtp>();
-        services.AddSingleton<IEmailSender, GmailSederService>();
+        services.AddSingleton<IEmailSender, EmailSenderSmtp>();
+        //services.AddSingleton<IEmailSender, GmailSederService>();
         services.AddTransient<ChromeDriver>(sp =>
         {
             var chromeDriverOptions = sp.GetRequiredService<IOptions<AppOptions>>().Value.ChromeDriverOptions;
