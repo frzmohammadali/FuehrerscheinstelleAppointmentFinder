@@ -9,8 +9,9 @@ A script for periodically checking available appointments of the driving license
 # How to run the script
 1. Clone the repo
 2. Open `src/appsettings.json`
-3. Modify the arguments according to your needs. For sending emails, provide SMTP settings (**recommended to use Outlook email**) (see Hints below))
-~~4. To run with docker~~
+3. Modify the arguments according to your needs. For sending emails, provide SMTP settings (**recommended to use Outlook email**) (see Hints below)
+
+4. ~~To run with docker~~
 	~~1. Open a terminal at `src/`~~
 	~~2. Run `$ docker build -t fuehrerscheinstelle_appointment_finder:latest .`~~
 	~~3. Run `$ docker run -it fuehrerscheinstelle_appointment_finder`~~
