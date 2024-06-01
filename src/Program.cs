@@ -36,7 +36,7 @@ var app = Host.CreateDefaultBuilder()
         services.AddSingleton<IConfiguration>(config);
         services.AddOptions<AppOptions>()
         .Bind(config.GetSection(nameof(AppOptions)))
-        .ValidateDataAnnotations();
+        .ValidateOnStart();
         //services.AddSingleton<IEmailSender, EmailSenderSendGrid>();
         //services.AddSingleton<IEmailSender, EmailSenderSmtp>();
         services.AddSingleton<IEmailSender, GmailSederService>();
@@ -48,12 +48,6 @@ var app = Host.CreateDefaultBuilder()
             if (chromeDriverOptions.Headless) options.AddArgument("headless");
             var driver = new ChromeDriver(options);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            //var _logger = sp.GetRequiredService<ILogger<Program>>();
-            //driver.GetDevToolsSession().LogMessage += DevToolsSessionLogMessage;
-            //void DevToolsSessionLogMessage(object? sender, OpenQA.Selenium.DevTools.DevToolsSessionLogMessageEventArgs e)
-            //{
-            //    _logger.LogDebug(e.Level.ToString(), e.Message);
-            //}
             return driver;
         });
     })
@@ -70,7 +64,7 @@ logger.LogInformation("--== bot has started ==--");
 
 DateTimeOffset? lastTry = null;
 DateTimeOffset? lastPrint = null;
-var _lock = new object();
+var @lock = new object();
 
 while (keepRunning)
 {
@@ -88,7 +82,7 @@ while (keepRunning)
 
     try
     {
-        lock (_lock)
+        lock (@lock)
         {
             using var driver = app.Services.GetRequiredService<ChromeDriver>();
             driver.Navigate().GoToUrl("https://onlinetermine.kaiserslautern.de/fuehrerscheinstelle");
@@ -99,7 +93,7 @@ while (keepRunning)
             var weiterButton = driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[3]/div[2]/div[2]/button"));
             weiterButton.Click();
 
-            var chooseOrderButton = driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[3]/div[3]/div/div[1]/div[12]/div/div[2]/span[3]"));
+            var chooseOrderButton = driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[3]/div[3]/div/div[1]/div[13]/div/div[2]/span[3]"));
             chooseOrderButton.Click();
 
             var weiterButton2 = driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[3]/div[3]/div/div[3]/button"));

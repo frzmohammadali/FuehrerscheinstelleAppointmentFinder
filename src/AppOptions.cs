@@ -1,6 +1,4 @@
-﻿using System.Security.AccessControl;
-
-namespace FuehrerscheinstelleAppointmentFinder
+﻿namespace FuehrerscheinstelleAppointmentFinder
 {
     public class AppOptions
     {
