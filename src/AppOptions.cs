@@ -1,4 +1,6 @@
-﻿namespace FuehrerscheinstelleAppointmentFinder
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace FuehrerscheinstelleAppointmentFinder
 {
     public class AppOptions
     {
@@ -51,10 +53,15 @@
     public class AppointmentBookingForm
     {
         public bool Enabled { get; set; }
+
+        [RegularExpression("^(Herr|Frau|Divers|Firma)$", ErrorMessage = "Invalid gender value. Must be one of [\"Herr\", \"Frau\", \"Divers\", \"Firma\"]")]
+        public string Salutation { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string EmailAddress { get; set; }
         public string PhoneNumber { get; set; }
+
+        [RegularExpression(@"\d{2}\.\d{2}\.\d{4}", ErrorMessage = "Birthday must be in the format 'dd.mm.yyyy'.")]
         public string Birthday { get; set; }
     }
 

@@ -10,6 +10,8 @@ using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
 using WebDriverManager.Helpers;
 using Microsoft.Extensions.Options;
+using Thread = System.Threading.Thread;
+using System.Text.RegularExpressions;
 
 var keepRunning = true;
 long successfulTryCount = 0;
@@ -55,6 +57,26 @@ var app = Host.CreateDefaultBuilder()
 
 var logger = app.Services.GetRequiredService<ILogger<Program>>();
 var options = app.Services.GetRequiredService<IOptions<AppOptions>>().Value;
+
+logger.LogInformation("Validating parameter values...");
+await Task.Delay(1000);
+
+const string salutationPattern = "^(Herr|Frau|Divers|Firma)$";
+const string birthdayPattern = @"\d{2}\.\d{2}\.\d{4}";
+
+if (!Regex.IsMatch(options.AppointmentBookingForm.Salutation, salutationPattern))
+{
+    logger.LogError("Invalid salutation value. Must be one of [\"Herr\", \"Frau\", \"Divers\", \"Firma\"]");
+    await ExitApp(-1);
+}
+
+if (!Regex.IsMatch(options.AppointmentBookingForm.Birthday, birthdayPattern))
+{
+    logger.LogError("Birthday must be in the format 'dd.mm.yyyy'.");
+    await ExitApp(-1);
+}
+
+logger.LogInformation("Validating parameter successful.");
 
 var retryIntervalInMinutes = int.Parse(options.RetryIntervalInMinutes);
 var printIntervalInSeconds = int.Parse(options.PrintIntervalInSeconds);
@@ -136,6 +158,32 @@ while (keepRunning)
                     var actualSelectedTime = timeLinkToClick.Text;
                     timeLinkToClick.Click();
 
+                    var salutationInput =
+                        driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[2]/div[1]/div/div[1]/div[1]/div"));
+                    salutationInput.Click();
+                    var herrInput = driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[2]/div[1]/div/div[1]/div[1]/div/div[2]/div[1]"));
+                    var frauInput = driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[2]/div[1]/div/div[1]/div[1]/div/div[2]/div[2]"));
+                    var diversInput = driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[2]/div[1]/div/div[1]/div[1]/div/div[2]/div[3]"));
+                    var firmaInput = driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[2]/div[1]/div/div[1]/div[1]/div/div[2]/div[4]"));
+
+                    switch (options.AppointmentBookingForm.Salutation)
+                    {
+                        case "Herr":
+                            herrInput.Click();
+                            break;
+                        case "Frau":
+                            frauInput.Click();
+                            break;
+                        case "Divers":
+                            diversInput.Click();
+                            break;
+                        case "Firma":
+                            firmaInput.Click();
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(options.AppointmentBookingForm.Salutation));
+                    }
+
                     var firstNameInput =
                         driver.FindElement(By.XPath("/html/body/div[2]/div[2]/form/div[2]/div[1]/div/div[1]/div[3]/input"));
                     firstNameInput.SendKeys(options.AppointmentBookingForm.FirstName);
@@ -200,13 +248,19 @@ while (keepRunning)
     }
 }
 
-await app.StopAsync(TimeSpan.FromSeconds(5));
-await app.WaitForShutdownAsync();
+await ExitApp(0);
 
-logger.LogInformation("--== ChromeDriver is successfully closed ==--");
-logger.LogInformation("--== application successfully exited ==--");
+async Task ExitApp(int exitCode)
+{
+    await app.StopAsync(TimeSpan.FromSeconds(5));
+    await app.WaitForShutdownAsync();
 
-await Task.Delay(1000);
-Console.WriteLine("\n");
-Console.WriteLine("Press any key to exit...");
-Console.ReadKey();
+    logger.LogInformation("--== ChromeDriver is successfully closed ==--");
+    logger.LogInformation("--== application successfully exited ==--");
+
+    await Task.Delay(1000);
+    Console.WriteLine("\n");
+    Console.WriteLine("Press any key to exit...");
+    Console.ReadKey();
+    Environment.Exit(exitCode);
+}
